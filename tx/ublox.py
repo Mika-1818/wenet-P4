@@ -1079,12 +1079,17 @@ class UBloxGPS(object):
             msg = self.gps.receive_message()
 
         msg.unpack()
+        proto_read = False
         for rec in msg._recs:
             if 'extension' in rec:
                 extension = rec['extension'].split(b'\0', 1)[0].decode('utf-8')
                 if 'PROTVER' in extension:
                     self.prot_ver = float(extension.split('=')[1])
-                    # print(f"UBX protocol version: {self.prot_ver}")
+                    self.debug_message(f"Read UBX protocol version: {self.prot_ver}")
+                    proto_read = True
+
+        if not proto_read:
+            self.debug_message(f"Using UBX protocol version: {self.prot_ver}")
 
         # For 6/7/8 series modules
         if self.prot_ver <= 23.01:
@@ -1379,7 +1384,8 @@ if __name__ == "__main__":
         callback=gps_callback, 
         update_rate_ms=500, 
         dynamic_model=DYNAMIC_MODEL_AIRBORNE1G, 
-        ntpd_update=args.ntp
+        ntpd_update=args.ntp,
+        debug_ptr=logging.info
         )
 
     try:
