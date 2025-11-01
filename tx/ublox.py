@@ -978,7 +978,7 @@ class UBloxGPS(object):
         'iTOW':         0,      # GPS Seconds in week.
         'leapS':        0,      # GPS Leap Seconds (Difference between GPS time and UTC time)
         'timestamp':    " ",    # ISO-8601 Compliant Date-code (generate by Python's datetime.isoformat() function)
-        'datetime': datetime.datetime.utcnow(),       # Fix time as a datetime object.
+        'datetime': datetime.datetime.now(datetime.timezone.utc),       # Fix time as a datetime object.
         'dynamic_model': 255      # Current dynamic model in use.
     }
     # Lock files for writing and reading to the internal state dictionary.
