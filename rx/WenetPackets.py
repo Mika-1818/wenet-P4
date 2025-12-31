@@ -8,7 +8,7 @@
 import struct
 import traceback
 import datetime
-import crcmod
+import crc
 import logging
 import json
 import requests
@@ -638,8 +638,12 @@ def crc16_ccitt(data):
     
     (CRC16 CCITT: start 0xFFFF, poly 0x1021)
     """
-    crc16 = crcmod.predefined.mkCrcFun('crc-ccitt-false')
-    return hex(crc16(data))[2:].upper().zfill(4)
+
+    calculator = crc.Calculator(crc.Configuration(
+        16, 0x1021,0xffff
+    ))
+
+    return hex(calculator.checksum(data))[2:].upper().zfill(4)
 
 
 def image_telemetry_habitat_string(packet):
