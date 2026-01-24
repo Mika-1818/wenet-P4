@@ -1,5 +1,5 @@
 numpy
-crcmod
+crc
 flask
 flask-socketio
 simple-websocket
