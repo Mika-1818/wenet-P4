@@ -18,7 +18,7 @@
 import sys
 import os
 import datetime
-import crc
+import crcmod
 import json
 import shutil
 import socket
@@ -32,18 +32,6 @@ from ldpc_encoder import *
 from radio_wrappers import *
 from queue import Queue
 
-def crc16_ccitt(data):
-    """
-    Calculate the CRC16 CCITT checksum of *data*.
-    
-    (CRC16 CCITT: start 0xFFFF, poly 0x1021)
-    """
-
-    calculator = crc.Calculator(crc.Configuration(
-        16, 0x1021,0xffff
-    ))
-
-    return calculator.checksum(data)
 
 class PacketTX(object):
     """ Packet Transmitter Class
@@ -105,7 +93,7 @@ class PacketTX(object):
         self.callsign = callsign.encode('ascii')
         self.fec = fec
 
-        self.crc16 = crc16_ccitt
+        self.crc16 = crcmod.predefined.mkCrcFun('crc-ccitt-false')
 
         self.idle_message = self.frame_packet(self.idle_sequence,fec=fec)
 
