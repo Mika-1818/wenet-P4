@@ -1,8 +1,8 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 #
 # Wenet Packet Transmitter Class
 #
-#   Copyright (C) 2018  Mark Jessop <vk5qi@rfhead.net>
+#   Copyright (C) 2025  Mark Jessop <vk5qi@rfhead.net>
 #   Released under GNU GPL v3 or later
 #
 # Frames packets (preamble, unique word, checksum)
@@ -18,7 +18,7 @@
 import sys
 import os
 import datetime
-import crcmod
+import binascii
 import json
 import shutil
 import socket
@@ -47,7 +47,7 @@ class PacketTX(object):
         Preamble: 16 repeats of 0x55. May not be required, but helps with timing estimation on the demod.
         Unique Word: 0xABCDEF01  Used for packet detection in the demod chain.
         Packet: 256 bytes of arbitrary binary data.
-        Checksum: CRC16 checksum.
+        Checksum: CRC16-CCITT checksum.
         Parity bits: 516 bits (zero-padded to 65 bytes) of LDPC parity bits, using a r=0.8 Repeat-accumulate code, developed by
                      Bill Cowley, VK5DSP. See ldpc_enc.c for more details.
 
@@ -93,7 +93,8 @@ class PacketTX(object):
         self.callsign = callsign.encode('ascii')
         self.fec = fec
 
-        self.crc16 = crcmod.predefined.mkCrcFun('crc-ccitt-false')
+        # Use the binascii crc_hqx CRC function, which is just a CRC16-CCITT if you give it the right initial value.
+        self.crc16 = lambda x: binascii.crc_hqx(x,0xffff)
 
         self.idle_message = self.frame_packet(self.idle_sequence,fec=fec)
 
