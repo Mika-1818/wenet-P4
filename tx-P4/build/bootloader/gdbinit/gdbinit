@@ -1,0 +1,2 @@
+source /home/mika/wenet-P4/tx-P4/build/bootloader/gdbinit/symbols
+source /home/mika/wenet-P4/tx-P4/build/bootloader/gdbinit/connect

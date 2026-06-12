@@ -1286,7 +1286,7 @@ char ssdv_dec_feed(ssdv_t *s, uint8_t *packet)
 	/* If this is the first packet, write the JPEG headers */
 	if(s->packet_id == 0)
 	{
-		const char *factor;
+		const char *factor = "Unknown";
 		char callsign[SSDV_MAX_CALLSIGN + 1];
 		
 		/* Read the fixed headers from the packet */
